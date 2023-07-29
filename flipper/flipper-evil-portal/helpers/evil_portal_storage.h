@@ -3,10 +3,6 @@
 #include <furi.h>
 #include <storage/storage.h>
 
-#define PORTAL_FILE_DIRECTORY_PATH EXT_PATH("apps_data/evil_portal")
-#define EVIL_PORTAL_AP_SAVE_PATH PORTAL_FILE_DIRECTORY_PATH "/ap.config.txt"
-#define EVIL_PORTAL_LOG_SAVE_PATH PORTAL_FILE_DIRECTORY_PATH "/logs"
-
 typedef struct {
     FuriString *html_file;
     FuriString *ap_name;

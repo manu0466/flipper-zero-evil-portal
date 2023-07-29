@@ -1,7 +1,8 @@
 #include "evil_portal_storage.h"
 #include <flipper_format/flipper_format.h>
-#include <storage/storage.h>
 
+#define PORTAL_FILE_DIRECTORY_PATH EXT_PATH("apps_data/evil_portal")
+#define EVIL_PORTAL_LOG_SAVE_PATH PORTAL_FILE_DIRECTORY_PATH "/logs"
 #define EVIL_PORTAL_CONFIG_PATH PORTAL_FILE_DIRECTORY_PATH "/evil_portal.conf"
 
 
