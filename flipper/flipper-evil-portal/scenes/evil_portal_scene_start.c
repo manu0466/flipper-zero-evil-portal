@@ -24,11 +24,22 @@ typedef struct {
   InputArgs needs_keyboard;
   FocusConsole focus_console;
   bool show_stopscan_tip;
+  Evil_PortalCustomEvent event;
 } Evil_PortalItem;
 
 // NUM_MENU_ITEMS defined in evil_portal_app_i.h - if you add an entry here,
 // increment it!
 const Evil_PortalItem items[NUM_MENU_ITEMS] = {
+    // select html
+    {"Select HTML",
+     {""},
+     1,
+     {},
+     NO_ARGS,
+     FOCUS_CONSOLE_END,
+     NO_TIP,
+     Evil_PortalEventSelectHTML},
+
     // send command
     {"Start portal",
      {""},
@@ -36,10 +47,18 @@ const Evil_PortalItem items[NUM_MENU_ITEMS] = {
      {SET_HTML_CMD},
      NO_ARGS,
      FOCUS_CONSOLE_END,
-     SHOW_STOPSCAN_TIP},
+     SHOW_STOPSCAN_TIP,
+     Evil_PortalEventStartConsole},
 
     // stop portal
-    {"Stop portal", {""}, 1, {RESET_CMD}, NO_ARGS, FOCUS_CONSOLE_START, SHOW_STOPSCAN_TIP},
+    {"Stop portal",
+     {""},
+     1,
+     {RESET_CMD},
+     NO_ARGS,
+     FOCUS_CONSOLE_START,
+     SHOW_STOPSCAN_TIP,
+     Evil_PortalEventStartConsole},
 
     // console
     {"Save logs",
@@ -48,7 +67,8 @@ const Evil_PortalItem items[NUM_MENU_ITEMS] = {
      {"savelogs"},
      NO_ARGS,
      FOCUS_CONSOLE_START,
-     SHOW_STOPSCAN_TIP},
+     SHOW_STOPSCAN_TIP,
+     Evil_PortalEventStartConsole},
 
     // help
     {"Help",
@@ -57,7 +77,8 @@ const Evil_PortalItem items[NUM_MENU_ITEMS] = {
      {"help"},
      NO_ARGS,
      FOCUS_CONSOLE_START,
-     SHOW_STOPSCAN_TIP},
+     SHOW_STOPSCAN_TIP,
+     Evil_PortalEventStartConsole},
 };
 
 static void evil_portal_scene_start_var_list_enter_callback(void *context,
@@ -79,8 +100,7 @@ static void evil_portal_scene_start_var_list_enter_callback(void *context,
                                  : item->focus_console;
   app->show_stopscan_tip = item->show_stopscan_tip;
 
-  view_dispatcher_send_custom_event(app->view_dispatcher,
-                                    Evil_PortalEventStartConsole);
+  view_dispatcher_send_custom_event(app->view_dispatcher, item->event);
 }
 
 static void
@@ -154,6 +174,20 @@ bool evil_portal_scene_start_on_event(void *context, SceneManagerEvent event) {
                                     app->selected_menu_index);
       scene_manager_next_scene(app->scene_manager,
                                Evil_PortalAppViewConsoleOutput);
+    } else if (event.event == Evil_PortalEventSelectHTML) {
+      FuriString* data_folder = furi_string_alloc_set(STORAGE_APP_DATA_PATH_PREFIX);
+      DialogsFileBrowserOptions browser_options;
+
+      dialog_file_browser_set_basic_options(&browser_options, ".html",  NULL);
+      browser_options.base_path = STORAGE_APP_DATA_PATH_PREFIX;
+
+      bool file_selected = dialog_file_browser_show(
+          app->dialogs, app->config->html_file, data_folder, &browser_options);
+      if (file_selected) {
+        evil_portal_config_save(app->storage, app->config);
+      }
+
+      furi_string_free(data_folder);
     }
     consumed = true;
   } else if (event.type == SceneManagerEventTypeTick) {

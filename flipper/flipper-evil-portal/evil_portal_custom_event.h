@@ -5,4 +5,5 @@ typedef enum {
   Evil_PortalEventStartConsole,
   Evil_PortalEventStartKeyboard,
   Evil_PortalEventStartPortal,
+  Evil_PortalEventSelectHTML,
 } Evil_PortalCustomEvent;

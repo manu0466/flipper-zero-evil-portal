@@ -14,7 +14,7 @@
 #include <storage/storage.h>
 #include <dialogs/dialogs.h>
 
-#define NUM_MENU_ITEMS (4)
+#define NUM_MENU_ITEMS (5)
 
 #define EVIL_PORTAL_TEXT_BOX_STORE_SIZE (4096)
 #define UART_CH (FuriHalUartIdUSART1)
