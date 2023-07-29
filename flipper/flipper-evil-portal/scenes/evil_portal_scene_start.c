@@ -50,16 +50,6 @@ const Evil_PortalItem items[NUM_MENU_ITEMS] = {
      SHOW_STOPSCAN_TIP,
      Evil_PortalEventStartConsole},
 
-    // console
-    {"Save logs",
-     {""},
-     1,
-     {"savelogs"},
-     NO_ARGS,
-     FOCUS_CONSOLE_START,
-     SHOW_STOPSCAN_TIP,
-     Evil_PortalEventStartConsole},
-
     // select html
     {"Select HTML",
      {""},
@@ -79,6 +69,16 @@ const Evil_PortalItem items[NUM_MENU_ITEMS] = {
      FOCUS_CONSOLE_END,
      NO_TIP,
      Evil_PortalEventSelectAPName},
+
+    // console
+    {"Save logs",
+     {""},
+     1,
+     {"savelogs"},
+     NO_ARGS,
+     FOCUS_CONSOLE_START,
+     SHOW_STOPSCAN_TIP,
+     Evil_PortalEventStartConsole},
 
     // help
     {"Help",
