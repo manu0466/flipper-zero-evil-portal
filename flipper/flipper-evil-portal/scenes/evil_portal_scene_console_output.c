@@ -104,7 +104,7 @@ void evil_portal_scene_console_output_on_enter(void *context) {
     if (0 ==
         strncmp(SET_HTML_CMD, app->selected_tx_string, strlen(SET_HTML_CMD))) {
 
-      app->sent_html = evil_portal_set_html(app->storage, EVIL_PORTAL_INDEX_SAVE_PATH);
+      app->sent_html = evil_portal_set_html(app->storage, furi_string_get_cstr(app->config->html_file));
     } else if (0 ==
                strncmp(RESET_CMD, app->selected_tx_string, strlen(RESET_CMD))) {
       app->sent_html = false;

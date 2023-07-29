@@ -4,6 +4,7 @@
 #include "evil_portal_custom_event.h"
 #include "evil_portal_uart.h"
 #include "scenes/evil_portal_scene.h"
+#include "helpers/evil_portal_storage.h"
 
 #include <gui/gui.h>
 #include <gui/modules/text_box.h>
@@ -11,6 +12,7 @@
 #include <gui/scene_manager.h>
 #include <gui/view_dispatcher.h>
 #include <storage/storage.h>
+#include <dialogs/dialogs.h>
 
 #define NUM_MENU_ITEMS (4)
 
@@ -26,6 +28,7 @@ struct Evil_PortalApp {
   ViewDispatcher *view_dispatcher;
   SceneManager *scene_manager;
   Storage *storage;
+  DialogsApp *dialogs;
 
   FuriString* portal_logs;
   const char *command_queue[1];
@@ -38,6 +41,8 @@ struct Evil_PortalApp {
 
   VariableItemList *var_item_list;
   Evil_PortalUart *uart;
+
+  Evil_PortalConfig_t *config;
 
   int selected_menu_index;
   int selected_option_index[NUM_MENU_ITEMS];

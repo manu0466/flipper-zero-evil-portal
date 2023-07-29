@@ -30,9 +30,11 @@ Evil_PortalApp *evil_portal_app_alloc() {
   app->has_command_queue = false;  
   app->command_index = 0;
   app->portal_logs = furi_string_alloc();
+  app->config = evil_portal_config_alloc();
 
   app->gui = furi_record_open(RECORD_GUI);
   app->storage = furi_record_open(RECORD_STORAGE);
+  app->dialogs = furi_record_open(RECORD_DIALOGS);
 
   app->view_dispatcher = view_dispatcher_alloc();
   app->scene_manager = scene_manager_alloc(&evil_portal_scene_handlers, app);
@@ -77,6 +79,8 @@ void evil_portal_app_free(Evil_PortalApp *app) {
     furi_string_free(app->portal_logs);
   }
 
+  evil_portal_config_free(app->config);
+
   // Send reset event to dev board
   evil_portal_uart_tx((uint8_t *)(RESET_CMD), strlen(RESET_CMD));
   evil_portal_uart_tx((uint8_t *)("\n"), 1);
@@ -101,6 +105,7 @@ void evil_portal_app_free(Evil_PortalApp *app) {
   // Close records
   furi_record_close(RECORD_GUI);
   furi_record_close(RECORD_STORAGE);
+  furi_record_close(RECORD_DIALOGS);
 
   free(app);
 }
@@ -109,9 +114,13 @@ int32_t evil_portal_app(void *p) {
   UNUSED(p);
   Evil_PortalApp *evil_portal_app = evil_portal_app_alloc();
 
+  evil_portal_config_load(evil_portal_app->storage, evil_portal_app->config);
   evil_portal_app->uart = evil_portal_uart_init(evil_portal_app);
 
   view_dispatcher_run(evil_portal_app->view_dispatcher);  
+
+  // Save the app configurations on exit.
+  evil_portal_config_save(evil_portal_app->storage, evil_portal_app->config);
 
   evil_portal_app_free(evil_portal_app);
 
