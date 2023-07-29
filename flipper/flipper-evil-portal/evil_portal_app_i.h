@@ -8,13 +8,14 @@
 
 #include <gui/gui.h>
 #include <gui/modules/text_box.h>
+#include <gui/modules/text_input.h>
 #include <gui/modules/variable_item_list.h>
 #include <gui/scene_manager.h>
 #include <gui/view_dispatcher.h>
 #include <storage/storage.h>
 #include <dialogs/dialogs.h>
 
-#define NUM_MENU_ITEMS (5)
+#define NUM_MENU_ITEMS (6)
 
 #define EVIL_PORTAL_TEXT_BOX_STORE_SIZE (4096)
 #define UART_CH (FuriHalUartIdUSART1)
@@ -38,6 +39,7 @@ struct Evil_PortalApp {
   FuriString *text_box_store;
   size_t text_box_store_strlen;
   TextBox *text_box;
+  TextInput *text_input;
 
   VariableItemList *var_item_list;
   Evil_PortalUart *uart;
@@ -61,4 +63,5 @@ typedef enum {
   Evil_PortalAppViewVarItemList,
   Evil_PortalAppViewConsoleOutput,
   Evil_PortalAppViewStartPortal,
+  Evil_PortalAppViewApName,
 } Evil_PortalAppView;

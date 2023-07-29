@@ -115,7 +115,6 @@ Evil_PortalUart *evil_portal_uart_init(Evil_PortalApp *app) {
 
   furi_thread_start(uart->rx_thread);
 
-  furi_hal_console_disable();
   if (app->BAUDRATE == 0) {
     app->BAUDRATE = 115200;
   }

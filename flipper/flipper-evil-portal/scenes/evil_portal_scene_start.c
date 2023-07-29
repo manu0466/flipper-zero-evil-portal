@@ -30,16 +30,6 @@ typedef struct {
 // NUM_MENU_ITEMS defined in evil_portal_app_i.h - if you add an entry here,
 // increment it!
 const Evil_PortalItem items[NUM_MENU_ITEMS] = {
-    // select html
-    {"Select HTML",
-     {""},
-     1,
-     {},
-     NO_ARGS,
-     FOCUS_CONSOLE_END,
-     NO_TIP,
-     Evil_PortalEventSelectHTML},
-
     // send command
     {"Start portal",
      {""},
@@ -69,6 +59,26 @@ const Evil_PortalItem items[NUM_MENU_ITEMS] = {
      FOCUS_CONSOLE_START,
      SHOW_STOPSCAN_TIP,
      Evil_PortalEventStartConsole},
+
+    // select html
+    {"Select HTML",
+     {""},
+     1,
+     {},
+     NO_ARGS,
+     FOCUS_CONSOLE_END,
+     NO_TIP,
+     Evil_PortalEventSelectHTML},
+
+    // select html
+    {"Select AP Name",
+     {""},
+     1,
+     {},
+     NO_ARGS,
+     FOCUS_CONSOLE_END,
+     NO_TIP,
+     Evil_PortalEventSelectAPName},
 
     // help
     {"Help",
@@ -188,6 +198,9 @@ bool evil_portal_scene_start_on_event(void *context, SceneManagerEvent event) {
       }
 
       furi_string_free(data_folder);
+    } else if (event.event == Evil_PortalEventSelectAPName) {
+      scene_manager_set_scene_state(app->scene_manager, Evil_PortalSceneStart, app->selected_menu_index);
+      scene_manager_next_scene(app->scene_manager, Evil_PortalSceneApName);
     }
     consumed = true;
   } else if (event.type == SceneManagerEventTypeTick) {
