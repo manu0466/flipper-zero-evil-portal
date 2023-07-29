@@ -9,6 +9,7 @@
 
 typedef struct {
     FuriString *html_file;
+    FuriString *ap_name;
 } Evil_PortalConfig_t;
 
 void write_logs(Storage *storage, FuriString* portal_logs);

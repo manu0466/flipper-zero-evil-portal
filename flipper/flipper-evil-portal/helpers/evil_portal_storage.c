@@ -2,10 +2,13 @@
 #include <flipper_format/flipper_format.h>
 #include <storage/storage.h>
 
-#define EVIL_PORTAL_INDEX_SAVE_PATH PORTAL_FILE_DIRECTORY_PATH "/index.html"
 #define EVIL_PORTAL_CONFIG_PATH PORTAL_FILE_DIRECTORY_PATH "/evil_portal.conf"
 
+
 #define CONFIG_KEY_HTML "html"
+#define CONFIG_DEFAULT_HTML_FILE PORTAL_FILE_DIRECTORY_PATH "/index.html"
+#define CONFIG_KEY_AP_NAME "ap_name"
+#define CONFIG_DEFAULT_AP_NAME "Evil Portal"
 
 static char *sequential_file_resolve_path(Storage *storage, const char *dir,
                                    const char *prefix, const char *extension) {
@@ -54,6 +57,9 @@ Evil_PortalConfig_t * evil_portal_config_alloc() {
   config->html_file = furi_string_alloc();
   furi_assert(config->html_file, "html file string alloc failed");
 
+  config->ap_name = furi_string_alloc();
+  furi_assert(config->ap_name, "ap name string alloc failed");
+
   return config;
 }
 
@@ -63,6 +69,7 @@ void evil_portal_config_free(Evil_PortalConfig_t *config) {
   }
 
   furi_string_free(config->html_file);
+  furi_string_free(config->ap_name);
 
   free(config);
 }
@@ -80,8 +87,13 @@ void evil_portal_config_load(Storage *storage, Evil_PortalConfig_t *config) {
   }
 
   if (!flipper_format_read_string(flipperFormat, CONFIG_KEY_HTML, config->html_file)) {
-    // Fallback to the default file
-    furi_string_set_str(config->html_file, EVIL_PORTAL_INDEX_SAVE_PATH);
+    // Fallback to the default html file.
+    furi_string_set_str(config->html_file, CONFIG_DEFAULT_HTML_FILE);
+  }
+
+  if (!flipper_format_read_string(flipperFormat, CONFIG_KEY_AP_NAME, config->ap_name)) {
+    // Fallback to the default ap name.
+    furi_string_set_str(config->ap_name, CONFIG_DEFAULT_AP_NAME);
   }
 
   flipper_format_file_close(flipperFormat);
@@ -99,6 +111,7 @@ bool evil_portal_config_save(Storage *storage, const Evil_PortalConfig_t *config
   }
 
   flipper_format_write_string(flipperFormat, CONFIG_KEY_HTML, config->html_file);
+  flipper_format_write_string(flipperFormat, CONFIG_KEY_AP_NAME, config->ap_name);
 
   flipper_format_file_close(flipperFormat);
   flipper_format_free(flipperFormat);
