@@ -1,4 +1,5 @@
 #include "../evil_portal_app_i.h"
+#include <dialogs/dialogs.h>
 
 // For each command, define whether additional arguments are needed
 // (enabling text input to fill them out), and whether the console
@@ -137,6 +138,18 @@ bool evil_portal_scene_start_on_event(void *context, SceneManagerEvent event) {
       scene_manager_set_scene_state(app->scene_manager, Evil_PortalSceneStart,
                                     app->selected_menu_index);
     } else if (event.event == Evil_PortalEventStartConsole) {
+
+      if (strcmp(items[app->selected_menu_index].actual_commands[0], SET_HTML_CMD) == 0) {
+        // Show an error message if the html file is not present before starting the
+        // evil portal.
+        if (!storage_file_exists(app->storage, furi_string_get_cstr(app->config->html_file))) {
+          FuriString *error_message = furi_string_alloc_printf("can't find html file %s on the sd card", furi_string_get_cstr(app->config->html_file));
+          dialog_message_show_storage_error(app->dialogs, furi_string_get_cstr(error_message));
+          furi_string_free(error_message);
+          return true;
+        }
+      }
+
       scene_manager_set_scene_state(app->scene_manager, Evil_PortalSceneStart,
                                     app->selected_menu_index);
       scene_manager_next_scene(app->scene_manager,
