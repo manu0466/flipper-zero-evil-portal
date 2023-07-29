@@ -105,8 +105,12 @@ bool evil_portal_config_save(Storage *storage, const Evil_PortalConfig_t *config
   furi_assert(storage, "storage is null");
   furi_assert(config, "config is null");
 
-  FlipperFormat *flipperFormat = flipper_format_file_alloc(storage);
+  // Save the configurations file only if changed or if the file don't exist.
+  if (config->changed || !storage_file_exists(storage, EVIL_PORTAL_CONFIG_PATH)) {
+    return true;
+  }
 
+  FlipperFormat *flipperFormat = flipper_format_file_alloc(storage);
   if (!flipper_format_file_open_always(flipperFormat, EVIL_PORTAL_CONFIG_PATH)) {
     return false;
   }
