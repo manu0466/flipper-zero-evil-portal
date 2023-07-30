@@ -1,5 +1,6 @@
 #include "../evil_portal_app_i.h"
 #include <dialogs/dialogs.h>
+#include "evil_portal_icons.h"
 
 // For each command, define whether additional arguments are needed
 // (enabling text input to fill them out), and whether the console
@@ -188,7 +189,7 @@ bool evil_portal_scene_start_on_event(void *context, SceneManagerEvent event) {
       FuriString* data_folder = furi_string_alloc_set(STORAGE_APP_DATA_PATH_PREFIX);
       DialogsFileBrowserOptions browser_options;
 
-      dialog_file_browser_set_basic_options(&browser_options, ".html",  NULL);
+      dialog_file_browser_set_basic_options(&browser_options, ".html", &I_evil_portal_10px);
       browser_options.base_path = STORAGE_APP_DATA_PATH_PREFIX;
 
       bool file_selected = dialog_file_browser_show(
