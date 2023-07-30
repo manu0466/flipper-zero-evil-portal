@@ -72,10 +72,13 @@ void evil_portal_scene_console_output_on_enter(void *context) {
       app->has_command_queue = true;
       app->command_index = 0;
       if (app->show_stopscan_tip) {
-        const char *msg =
-            "Starting portal\nIf no response press\nBACK to return\n";
-        furi_string_cat_str(app->text_box_store, msg);
-        app->text_box_store_strlen += strlen(msg);
+        int len = furi_string_cat_printf(app->text_box_store,
+                           "Starting portal\nIf no response press\nBACK to return\n"
+                           "HTML file: %s\n",
+                           furi_string_get_cstr(app->config->html_file));
+        if (len > 0) {
+          app->text_box_store_strlen += len;
+        }
       }
     }
 
