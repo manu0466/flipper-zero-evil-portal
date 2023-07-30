@@ -18,6 +18,9 @@ void evil_portal_scene_ap_name_on_enter(void *context) {
     text_input_set_header_text(text_input, "AP Name/SSID");
     text_input_set_minimum_length(text_input, 2);
 
+    // Initialize the buffer with the current AP name.
+    snprintf(AP_NAME_BUFFER, sizeof(AP_NAME_BUFFER), "%s", furi_string_get_cstr(app->config->ap_name));
+
     text_input_set_result_callback(
         text_input,
         evil_portal_scene_change_text_input_callback,
