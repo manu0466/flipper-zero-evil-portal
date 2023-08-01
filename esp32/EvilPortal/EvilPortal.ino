@@ -2,6 +2,7 @@
 #include <AsyncTCP.h>
 #include <DNSServer.h>
 #include <WiFi.h>
+#include "esp_wifi.h"
 
 #define B_PIN 4
 #define G_PIN 5
@@ -32,6 +33,12 @@ bool password_received = false;
 // null terminator character.
 char apName[33] = "";
 String index_html;
+
+// Default mac address
+bool mac_initialized = false;
+uint8_t default_ap_mac[6] = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+
+bool randomize_mac = false;
 
 // RESET
 void (*resetFunction)(void) = 0;
@@ -101,6 +108,21 @@ void startAP() {
 
   WiFi.mode(WIFI_AP);
   WiFi.softAP(apName);
+
+  if (!mac_initialized) {
+    esp_wifi_get_mac(WIFI_IF_AP, default_ap_mac);
+    mac_initialized = true;
+  }
+
+  if (randomize_mac) {
+    uint8_t random_mac[6];
+    for (int i = 0; i < 6; i++) {
+      random_mac[i] = (uint8_t)random(0xff);
+    }
+    esp_wifi_set_mac(WIFI_IF_AP, random_mac);
+  } else {
+    esp_wifi_set_mac(WIFI_IF_AP, default_ap_mac);
+  }
 
   Serial.print("ap ip address: ");
   Serial.println(WiFi.softAPIP());
